@@ -9,7 +9,7 @@ private:
 	int targetY;
 	bool up, down, left, right;
 	NNet *neuralNet;
-	int rotation;
+	float rotation;
 	int maxDist;
 	int dist;
 	std::vector<float> *inputs;

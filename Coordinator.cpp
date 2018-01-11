@@ -85,13 +85,13 @@ bool Coordinator::update()
 	neuralNet->refresh();
 
 	rotation = neuralNet->getOutput(0);
-
-	currentX += 10 * cos(rotation * M_PI / 180.0);
-	currentY += 10 * sin(rotation *M_PI / 180.0);
+	std::cout << rotation << std::endl;
+	currentX += 8* cos(rotation * M_PI / 180.0f);
+	currentY += 8* sin(rotation *M_PI / 180.0f);
 
 	dist = maxDist - sqrt(pow(abs(targetX - currentX), 2) + pow(abs(targetY - currentY), 2));
 
-	if (maxDist - dist < 5)
+	if (dist < 5)
 		return true;
 	else
 		return false;

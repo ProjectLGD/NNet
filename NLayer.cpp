@@ -4,7 +4,7 @@
 
 NLayer::NLayer()
 {
-	neurons = new std::vector<Neuron>();
+	neurons = new std::vector<Neuron*>();
 }
 
 float NLayer::sigmoid(float a, float p)
@@ -26,20 +26,20 @@ void NLayer::evaluate(std::vector<float> input, std::vector<float> &output)
 	{
 		float activation = 0.0f;
 
-		for (int j = 0; j < neurons->at(i).getNumInputs() - 1; j++)
+		for (int j = 0; j < neurons->at(i)->getNumInputs() - 1; j++)
 		{
-			activation += input[inputIndex] * neurons->at(i).weights->at(j);
+			activation += input[inputIndex] * neurons->at(i)->weights->at(j);
 			inputIndex++;
 		}
 
-		activation += neurons->at(i).weights->at(neurons->at(i).getNumInputs()) *(-1.0f); //BIAS
+		activation += neurons->at(i)->weights->at(neurons->at(i)->getNumInputs()) *(-1.0f); //BIAS
 
 		output.push_back(sigmoid(activation, 1.0f));
 		inputIndex = 0;
 	}
 }
 
-void NLayer::loadLayer(std::vector<Neuron>* input)
+void NLayer::loadLayer(std::vector<Neuron*>* input)
 {
 	totalNeurons = input->size();
 	neurons = input;
@@ -54,12 +54,13 @@ void NLayer::populateLayer(int numOfNeurons, int numOfInputs)
 	{
 		for (int i = 0; i < numOfNeurons; i++)
 		{
-			neurons->push_back(Neuron());
+			Neuron *n = new Neuron();
+			neurons->push_back(n);
 		}
 	}
 
 	for (int i = 0; i < numOfNeurons; i++)
-		neurons->at(i).populate(numOfInputs);
+		neurons->at(i)->populate(numOfInputs);
 
 }
 
@@ -73,22 +74,23 @@ void NLayer::setWeights(std::vector<float> *weights, int numOfNeurons, int numOf
 	{
 		for (int i = 0; i < numOfNeurons; i++)
 		{
-			neurons->push_back(Neuron());
+			Neuron *n = new Neuron();
+			neurons->push_back(n);
 		}
 	}
 
 	for (int i = 0; i < numOfNeurons; i++)
 	{
-		if (neurons->at(i).weights->size() < numOfInputs)
+		if (neurons->at(i)->weights->size() < numOfInputs)
 		{
-			for (int j = 0; j < numOfInputs - neurons->at(i).weights->size(); j++)
+			for (int j = 0; j < numOfInputs - neurons->at(i)->weights->size(); j++)
 			{
-				neurons->at(i).weights->push_back(0.0f);
+				neurons->at(i)->weights->push_back(0.0f);
 			}
 		}
 
 		for (int j = 0; j<numOfInputs; j++) {
-			neurons->at(i).weights->at(j) = weights->at(index);
+			neurons->at(i)->weights->at(j) = weights->at(index);
 			index++;
 		}
 	}
@@ -99,13 +101,13 @@ void NLayer::getWeights(std::vector<float> &output)
 	output.clear();
 
 	for (int i = 0; i<this->totalNeurons; i++) {
-		for (int j = 0; j<neurons->at(i).weights->size(); j++) {
-			output[totalNeurons*i + j] = neurons->at(i).weights->at(j);
+		for (int j = 0; j<neurons->at(i)->weights->size(); j++) {
+			output[totalNeurons*i + j] = neurons->at(i)->weights->at(j);
 		}
 	}
 }
 
-void NLayer::setNeurons(std::vector<Neuron> *neurons, int numOfNeurons, int numOfInputs)
+void NLayer::setNeurons(std::vector<Neuron*> *neurons, int numOfNeurons, int numOfInputs)
 {
 	totalInputs = numOfInputs;
 	totalNeurons = numOfNeurons;

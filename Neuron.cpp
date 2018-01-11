@@ -9,7 +9,7 @@ Neuron::Neuron()
 
 float Neuron::randomFloat()
 {
-	srand(time(0));
+	//srand(time(0));
 	float test = rand() % 32767;
 
 	float result = test / 32767 + 1;
@@ -19,7 +19,8 @@ float Neuron::randomFloat()
 
 float Neuron::randomClamped()
 {
-	return randomFloat() - randomFloat();
+	float clamped = randomFloat() - randomFloat();
+	return clamped;
 }
 
 float Neuron::clamp(float val, float min, float max)

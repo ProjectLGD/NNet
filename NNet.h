@@ -8,7 +8,7 @@ private:
 	//Input layer, Hidden layers, loutput layers
 	NLayer *inputLayer;
 
-	std::vector<NLayer> *hiddenLayers;
+	std::vector<NLayer*> *hiddenLayers;
 	NLayer *outputLayer;
 
 	std::vector<float>* outputs;

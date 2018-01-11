@@ -8,7 +8,7 @@ NNet::NNet()
 	outputs = new std::vector<float>();
 	inputLayer = new NLayer();
 	outputLayer = new NLayer();
-	hiddenLayers = new std::vector<NLayer>();
+	hiddenLayers = new std::vector<NLayer*>();
 }
 
 void NNet::refresh()
@@ -19,7 +19,7 @@ void NNet::refresh()
 		if (i > 0) {
 			inputs = outputs;
 		}
-		hiddenLayers->at(i).evaluate(*inputs,*outputs);
+		hiddenLayers->at(i)->evaluate(*inputs,*outputs);
 
 	}
 	inputs = outputs;
@@ -50,13 +50,14 @@ void NNet::createNet(int numOfHIddenLayers, int numOfInputs, int NeuronsPerHidde
 	outputAmount = numOfOutputs;
 	
 	for (int i = 0; i<numOfHIddenLayers; i++) {
-		NLayer layer;
-		layer.populateLayer(NeuronsPerHidden, numOfInputs);
-		hiddenLayers->push_back(layer);;
+		NLayer *layer = new NLayer();
+		layer->populateLayer(NeuronsPerHidden, numOfInputs);
+		hiddenLayers->push_back(layer);
 	}
 
 	outputLayer = new NLayer();
 	outputLayer->populateLayer(numOfOutputs, NeuronsPerHidden);
+	std::cout << "net created" << std::endl;
 }
 
 void NNet::releaseNet()
@@ -77,7 +78,7 @@ void NNet::releaseNet()
 	//}
 	
 	delete(hiddenLayers);
-	hiddenLayers = new std::vector<NLayer>();
+	hiddenLayers = new std::vector<NLayer*>();
 }
 
 int NNet::getNumOfHiddenLayers()
@@ -91,7 +92,7 @@ Genome NNet::toGenome()
 
 	for (int i = 0; i<this->hiddenLayers->size(); i++) {
 		std::vector<float> *weights = new std::vector<float>();
-		hiddenLayers->at(i).getWeights(*weights);
+		hiddenLayers->at(i)->getWeights(*weights);
 		for (int j = 0; j<weights->size(); j++) {
 			genome.weights->push_back(weights->at(j));
 		}
@@ -114,14 +115,15 @@ void NNet::fromGenome(Genome *genome, int numofInputs, int neuronsPerHidden, int
 	inputAmount = numofInputs;
 
 	int weightsForHidden = numofInputs * neuronsPerHidden;
-	NLayer hidden;
+	NLayer *hidden = new NLayer();
 
-	std::vector<Neuron> *neurons = new std::vector<Neuron>();
+	std::vector<Neuron*> *neurons = new std::vector<Neuron*>();
 	
 
 	for (int i = 0; i<neuronsPerHidden; i++) {
 		//init
-		neurons->push_back(Neuron());
+		Neuron *n = new Neuron();
+		neurons->push_back(n);
 		std::vector<float> *weights = new std::vector<float>();
 		
 		
@@ -129,21 +131,22 @@ void NNet::fromGenome(Genome *genome, int numofInputs, int neuronsPerHidden, int
 			weights->push_back(0.0f);
 			weights->at(j) = genome->weights->at(i*neuronsPerHidden + j);
 		}
-		neurons->at(i).weights = new std::vector<float>();
-		neurons->at(i).initialise(weights, numofInputs);
+		neurons->at(i)->weights = new std::vector<float>();
+		neurons->at(i)->initialise(weights, numofInputs);
 		
 	}
-	hidden.loadLayer(neurons);
+	hidden->loadLayer(neurons);
 
 	this->hiddenLayers->push_back(hidden);
 
 	//Clear weights and reasign the weights to the output
 	int weightsForOutput = neuronsPerHidden * numOfOutputs;
-	std::vector<Neuron> *outNeurons = new std::vector<Neuron>();
+	std::vector<Neuron*> *outNeurons = new std::vector<Neuron*>();
 
 
 	for (int i = 0; i < numOfOutputs; i++) {
-		outNeurons->push_back(Neuron());
+		Neuron *n = new Neuron();
+		outNeurons->push_back(n);
 
 		std::vector<float> *weights = new std::vector<float>();
 
@@ -151,8 +154,8 @@ void NNet::fromGenome(Genome *genome, int numofInputs, int neuronsPerHidden, int
 			weights->push_back(0.0f);
 			weights->at(j) = genome->weights->at(i*neuronsPerHidden + j);
 		}
-		outNeurons->at(i).weights = new std::vector<float>();
-		outNeurons->at(i).initialise(weights, neuronsPerHidden);
+		outNeurons->at(i)->weights = new std::vector<float>();
+		outNeurons->at(i)->initialise(weights, neuronsPerHidden);
 		
 		
 	}
