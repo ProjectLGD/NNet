@@ -59,6 +59,8 @@ void Coordinator::resetDir()
 	this->right = false;
 }
 
+
+///NOT IN USE RIGHT NOW, GENERATES STANDARD NEURAL NETWORK FOR USE IF NONE IS SPECIFIED MANUALLY
 void Coordinator::start()
 {
 	neuralNet = new NNet();
@@ -67,10 +69,13 @@ void Coordinator::start()
 	rotation = 0;
 }
 
+
 bool Coordinator::update()
 {
+	///Clears earlier inputs
 	inputs->clear();
 
+	///Adds inputs to a list, these include the start and end coordinates aswell as the orientation of the target from the starting coord's perspective
 	inputs->push_back(currentX);
 	inputs->push_back(currentY);
 	inputs->push_back(targetX);
@@ -92,18 +97,27 @@ bool Coordinator::update()
 	std::cout << left << std::endl;
 	std::cout << right << std::endl;
 
+
+	///Inputs the list into the neural network
 	neuralNet->SetInputLayer(inputs);
+	///Runs the input layer through the neural network
 	neuralNet->refresh();
 
+	///Retrieves output value from outputlayer, in this case the rotation
 	rotation = neuralNet->getOutput(0);
 	std::cout << "rotation: " <<rotation << std::endl;
 	
+	///Calculate new position bases on rotation
 	currentX += cos((rotation*360) * M_PI / 180.0f);
 	currentY += sin((rotation*360) * M_PI / 180.0f);
 	std::cout << "currentX: " << currentX << " currentY: " << currentY << std::endl;
 
+
+	///UNUSED WAY OF CALCULATING FITNESS
 	//dist = maxDist - sqrt(pow(abs(targetX - currentX), 2) + pow(abs(targetY - currentY), 2));
 
+
+	///Checks if the new position is close enough to the target coord to end, if so it returns true
 	if (currentX > targetX - 5 && currentX < targetX + 5)
 	{
 		if (currentY > targetY - 5 && currentY < targetY + 5)

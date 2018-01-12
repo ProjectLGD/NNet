@@ -2,6 +2,7 @@
 #include "NNet.h"
 
 
+///Initialise Neural networks
 NNet::NNet()
 {
 	inputs = new std::vector<float>();
@@ -11,6 +12,7 @@ NNet::NNet()
 	hiddenLayers = new std::vector<NLayer*>();
 }
 
+///Pulls input values through all the hidden layers, then generates output layer
 void NNet::refresh()
 {
 	outputs->clear();
@@ -23,7 +25,7 @@ void NNet::refresh()
 
 	}
 	inputs = outputs;
-	//Process the layeroutputs through the output layer to
+	
 	outputLayer->evaluate(*inputs, *outputs);
 }
 
@@ -31,7 +33,7 @@ void NNet::SetInputLayer(std::vector<float> *input)
 {
 	inputs = input;
 }
-
+///Get output from output layer
 float NNet::getOutput(int ID)
 {
 	if (ID >= outputAmount)
@@ -44,6 +46,7 @@ int NNet::getTotalOutputs()
 	return outputAmount;
 }
 
+///Sets up Neural network structure based on parameters
 void NNet::createNet(int numOfHIddenLayers, int numOfInputs, int NeuronsPerHidden, int numOfOutputs)
 {
 	inputAmount = numOfInputs;
@@ -60,6 +63,7 @@ void NNet::createNet(int numOfHIddenLayers, int numOfInputs, int NeuronsPerHidde
 	std::cout << "net created" << std::endl;
 }
 
+///Clears neural network structure
 void NNet::releaseNet()
 {
 
@@ -86,6 +90,8 @@ int NNet::getNumOfHiddenLayers()
 	return hiddenLayers->size();
 }
 
+
+///Not used, converts Neural network structure back to genome of weights
 Genome NNet::toGenome()
 {
 	Genome genome;
@@ -107,6 +113,8 @@ Genome NNet::toGenome()
 	return genome;
 }
 
+
+///Fills neural network structure with the weights supplied by the genome.
 void NNet::fromGenome(Genome *genome, int numofInputs, int neuronsPerHidden, int numOfOutputs)
 {
 	releaseNet();
@@ -139,7 +147,7 @@ void NNet::fromGenome(Genome *genome, int numofInputs, int neuronsPerHidden, int
 
 	this->hiddenLayers->push_back(hidden);
 
-	//Clear weights and reasign the weights to the output
+	///Clear weights and reasign the weights to the output
 	int weightsForOutput = neuronsPerHidden * numOfOutputs;
 	std::vector<Neuron*> *outNeurons = new std::vector<Neuron*>();
 

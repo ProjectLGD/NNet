@@ -19,6 +19,7 @@ float NLayer::biPolarSigmoid(float a, float p)
 	return (2 / (1 +exp(ap)) - 1);
 }
 
+///Pulls values through layer
 void NLayer::evaluate(std::vector<float> input, std::vector<float> &output)
 {
 	int inputIndex = 0;
@@ -39,12 +40,14 @@ void NLayer::evaluate(std::vector<float> input, std::vector<float> &output)
 	}
 }
 
+///Fills layer with values from pre-existing layer
 void NLayer::loadLayer(std::vector<Neuron*>* input)
 {
 	totalNeurons = input->size();
 	neurons = input;
 }
 
+///Fills layer with Randomly generated neurons.
 void NLayer::populateLayer(int numOfNeurons, int numOfInputs)
 {
 	totalInputs = numOfInputs;
@@ -63,7 +66,7 @@ void NLayer::populateLayer(int numOfNeurons, int numOfInputs)
 		neurons->at(i)->populate(numOfInputs);
 
 }
-
+///Fills the neurons of this layer with given weights
 void NLayer::setWeights(std::vector<float> *weights, int numOfNeurons, int numOfInputs)
 {
 	int index = 0; 

@@ -32,7 +32,7 @@ float Neuron::clamp(float val, float min, float max)
 	else if (val > max)
 		return max;
 }
-
+///Fills neuron with randomly generated weights
 void Neuron::populate(int num)
 {
 	this->numInputs = num;
