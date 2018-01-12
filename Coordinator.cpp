@@ -81,20 +81,39 @@ bool Coordinator::update()
 	inputs->push_back(left);
 	inputs->push_back(right);
 
+	std::cout << "---------" << std::endl;
+	std::cout << currentX << std::endl;
+	std::cout << currentY << std::endl;
+	std::cout << targetX << std::endl;
+	std::cout << targetY << std::endl;
+
+	std::cout << up << std::endl;
+	std::cout << down << std::endl;
+	std::cout << left << std::endl;
+	std::cout << right << std::endl;
+
 	neuralNet->SetInputLayer(inputs);
 	neuralNet->refresh();
 
 	rotation = neuralNet->getOutput(0);
-	std::cout << rotation << std::endl;
-	currentX += 8* cos(rotation * M_PI / 180.0f);
-	currentY += 8* sin(rotation *M_PI / 180.0f);
+	std::cout << "rotation: " <<rotation << std::endl;
+	
+	currentX += cos((rotation*360) * M_PI / 180.0f);
+	currentY += sin((rotation*360) * M_PI / 180.0f);
+	std::cout << "currentX: " << currentX << " currentY: " << currentY << std::endl;
 
-	dist = maxDist - sqrt(pow(abs(targetX - currentX), 2) + pow(abs(targetY - currentY), 2));
+	//dist = maxDist - sqrt(pow(abs(targetX - currentX), 2) + pow(abs(targetY - currentY), 2));
 
-	if (dist < 5)
-		return true;
-	else
-		return false;
+	if (currentX > targetX - 5 && currentX < targetX + 5)
+	{
+		if (currentY > targetY - 5 && currentY < targetY + 5)
+		{
+			return true;
+		}
+	}		
+	
+
+	return false;
 
 }
 
