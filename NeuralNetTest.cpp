@@ -53,8 +53,7 @@ int main()
 			runs++;
 			std::cout <<"current Index: " <<i << " Current runs: " << runs << " current dist: " << c->getDist() << std::endl;
 			result = c->update();
-			if(result)
-				std::cout << "wrk damnit " << std::endl;
+			
 		}
 
 		//if (result == true)
